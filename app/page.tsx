@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ArrowRight, FileText, Users, Zap, Globe, Shield, Smartphone } from "lucide-react";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import Logo from "@/shared/components/Logo";
+import Header from "@/shared/components/LandingHeader";
 
 const features = [
   {
@@ -51,29 +50,7 @@ const features = [
 export default function Home() {
   return (
     <>
-      {/* Header */}
-      <header className="bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Logo />
-
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-
-            <SignedOut>
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" asChild>
-                  <Link href="/sign-in">Sign In</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/sign-up">Sign Up</Link>
-                </Button>
-              </div>
-            </SignedOut>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 sm:py-32">
