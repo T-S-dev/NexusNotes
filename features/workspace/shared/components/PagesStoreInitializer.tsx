@@ -35,6 +35,7 @@ export default function PagesStoreInitializer({ initialPages }: { initialPages: 
   useEffect(() => {
     if (pages !== undefined) {
       setPages(pages || []);
+      setError(null)
       setLoading(isLoading);
     }
   }, [pages, isLoading, setPages, setLoading]);
