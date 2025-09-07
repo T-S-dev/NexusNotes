@@ -22,7 +22,7 @@ To give you a better feel for the application, here is a short video demonstrati
 
 <div align="center">
 
-![Demo]()
+![Demo](https://github.com/T-S-dev/github-readme-demo-videos/blob/main/NexusNotesDemo.webp)
 
 </div>
 
