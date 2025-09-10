@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 
-import FirebaseSyncProvider from "@/shared/components/FirebaseSyncAuthProvider";
+import FirebaseAuthSync from "@/shared/components/FirebaseAuthSync";
 
 import "./globals.css";
 
@@ -20,24 +20,23 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className="flex min-h-screen flex-col">
-          <FirebaseSyncProvider>
-            {children}
-            <Toaster
-              position="bottom-right"
-              richColors
-              expand={true}
-              duration={2000}
-              visibleToasts={3}
-              toastOptions={{
-                classNames: {
-                  toast: "!border-none",
-                  error: "!bg-red-600 !text-white",
-                  success: "!bg-green-600 !text-white",
-                  info: "!bg-blue-600 !text-white",
-                },
-              }}
-            />
-          </FirebaseSyncProvider>
+          <FirebaseAuthSync />
+          {children}
+          <Toaster
+            position="bottom-right"
+            richColors
+            expand={true}
+            duration={2000}
+            visibleToasts={3}
+            toastOptions={{
+              classNames: {
+                toast: "!border-none",
+                error: "!bg-red-600 !text-white",
+                success: "!bg-green-600 !text-white",
+                info: "!bg-blue-600 !text-white",
+              },
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>
