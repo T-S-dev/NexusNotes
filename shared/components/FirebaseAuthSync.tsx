@@ -6,7 +6,7 @@ import { signInWithCustomToken, signOut as firebaseSignOut } from "firebase/auth
 
 import { auth } from "@/shared/lib/firebase/client";
 
-export default function FirebaseSyncProvider({ children }: { children: React.ReactNode }) {
+export default function FirebaseAuthSync() {
   const { getToken, isSignedIn, isLoaded } = useAuth();
 
   useEffect(() => {
@@ -33,5 +33,5 @@ export default function FirebaseSyncProvider({ children }: { children: React.Rea
     syncFirebase();
   }, [isLoaded, isSignedIn, getToken]);
 
-  return <>{children}</>;
+  return null;
 }
