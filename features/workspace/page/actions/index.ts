@@ -1,13 +1,15 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import OpenAI from "openai";
 
 import { getCurrentUser } from "@/features/auth/services/clerk/getCurrentAuth";
 import { upsertUserFromClerk } from "@/features/auth/services/firebase/upsertUserFromClerk";
 import * as pageService from "../services";
 
 import { Action } from "@/types/actions";
-import { AppError, AuthenticationError } from "@/shared/lib/errors";
+import { AppError, AuthenticationError, AuthorizationError } from "@/shared/lib/errors";
+import { liveblocks } from "@/shared/lib/liveblocks";
 
 export type UpdatePageParams = {
   title?: string;
@@ -77,6 +79,52 @@ export async function deletePageAction(pageId: string): Action<{ message: string
     return { success: true, data: { message: "Successfully deleted page." } };
   } catch (error) {
     console.error("An unexpected error occurred in deletePageAction:", error);
+
+    const message = error instanceof AppError ? error.message : "An unexpected error occurred.";
+    return { success: false, error: message };
+  }
+}
+
+// =====================================================================
+// == AI Actions
+// =====================================================================
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export async function summarizePageAction(pageId: string): Action<{ summary: string }> {
+  try {
+    const { userId } = await getCurrentUser();
+    if (!userId) throw new AuthenticationError();
+
+    const role = await pageService.getUserRole(pageId, userId);
+    if (!role) throw new AuthorizationError("You do not have access to this page.");
+
+    const yjsDoc = await liveblocks.getYjsDocument(pageId);
+
+    const data = yjsDoc["document-store"];
+    if (!data) throw new AppError("Could not retrieve page content to summarize.");
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert assistant that summarizes text into a few key bullet points.",
+        },
+        {
+          role: "user",
+          content: `Please summarize the following content:\n\n${data}`,
+        },
+      ],
+    });
+
+    const summary = response.choices[0].message.content ?? "Could not generate a summary.";
+
+    return { success: true, data: { summary } };
+  } catch (error) {
+    console.error("An unexpected error occurred in summarizePageAction:", error);
 
     const message = error instanceof AppError ? error.message : "An unexpected error occurred.";
     return { success: false, error: message };

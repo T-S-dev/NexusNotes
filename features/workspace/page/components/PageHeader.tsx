@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avat
 import { SidebarTrigger, useSidebar } from "@/shared/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import PageActionsMenu from "@/features/workspace/shared/components/PageActionsMenu";
+import AISummary from "./AISummary";
 
 type PageHeaderProps = {
   pageId: string;
@@ -28,6 +29,7 @@ export default function PageHeader({ pageId, pageTitle, isOwner }: PageHeaderPro
       <div className="flex h-16 items-center justify-between gap-2 border-b px-6">
         <div>{(isMobile || !open) && <SidebarTrigger />}</div>
         <div className="flex items-center gap-2">
+          <AISummary pageId={pageId} />
           <div className="flex items-center -space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
